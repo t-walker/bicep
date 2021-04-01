@@ -51,7 +51,7 @@ namespace Bicep.LangServer.IntegrationTests
             const string expectedSetName = "declarations";
             var uri = DocumentUri.From($"/{this.TestContext.TestName}");
 
-            using var client = await IntegrationTestHelper.StartServerWithTextAsync(string.Empty, uri);
+            using var client = await IntegrationTestHelper.StartServerWithTextAsync(this.TestContext, string.Empty, uri);
 
             var actual = await GetActualCompletions(client, uri, new Position(0, 0));
             var actualLocation = FileHelper.SaveResultFile(this.TestContext, $"{this.TestContext.TestName}_{expectedSetName}", actual.ToString(Formatting.Indented));
@@ -113,6 +113,7 @@ namespace Bicep.LangServer.IntegrationTests
             var syntaxTree = SyntaxTree.Create(documentUri.ToUri(), placeholderFile);
 
             var client = await IntegrationTestHelper.StartServerWithTextAsync(
+                this.TestContext,
                 placeholderFile,
                 documentUri,
                 null,
@@ -166,7 +167,7 @@ namespace Bicep.LangServer.IntegrationTests
 
             var uri = DocumentUri.FromFileSystemPath(entryPoint);
 
-            using var client = await IntegrationTestHelper.StartServerWithTextAsync(dataSet.Bicep, uri, resourceTypeProvider: TypeProvider, fileResolver: new FileResolver());
+            using var client = await IntegrationTestHelper.StartServerWithTextAsync(this.TestContext, dataSet.Bicep, uri, resourceTypeProvider: TypeProvider, fileResolver: new FileResolver());
 
             var intermediate = new List<(Position position, JToken actual)>();
 
@@ -192,7 +193,7 @@ hel|lo
 ");
 
             var syntaxTree = SyntaxTree.Create(new Uri("file:///main.bicep"), file);
-            using var client = await IntegrationTestHelper.StartServerWithTextAsync(file, syntaxTree.FileUri, resourceTypeProvider: TypeProvider);
+            using var client = await IntegrationTestHelper.StartServerWithTextAsync(this.TestContext, file, syntaxTree.FileUri, resourceTypeProvider: TypeProvider);
 
             foreach (var cursor in cursors)
             {
@@ -218,7 +219,7 @@ var test2 = |/* block comment */|
 ");
 
             var syntaxTree = SyntaxTree.Create(new Uri("file:///main.bicep"), file);
-            using var client = await IntegrationTestHelper.StartServerWithTextAsync(file, syntaxTree.FileUri, resourceTypeProvider: TypeProvider);
+            using var client = await IntegrationTestHelper.StartServerWithTextAsync(this.TestContext, file, syntaxTree.FileUri, resourceTypeProvider: TypeProvider);
 
             foreach (var cursor in cursors)
             {
@@ -244,7 +245,7 @@ var test2 = /|* block c|omment *|/
 ");
 
             var syntaxTree = SyntaxTree.Create(new Uri("file:///main.bicep"), file);
-            using var client = await IntegrationTestHelper.StartServerWithTextAsync(file, syntaxTree.FileUri, resourceTypeProvider: TypeProvider);
+            using var client = await IntegrationTestHelper.StartServerWithTextAsync(this.TestContext, file, syntaxTree.FileUri, resourceTypeProvider: TypeProvider);
 
             foreach (var cursor in cursors)
             {
@@ -277,7 +278,7 @@ output string test2 = testRes.properties.|
 ");
 
             var syntaxTree = SyntaxTree.Create(new Uri("file:///path/to/main.bicep"), file);
-            var client = await IntegrationTestHelper.StartServerWithTextAsync(file, syntaxTree.FileUri, resourceTypeProvider: BuiltInTestTypes.Create());
+            var client = await IntegrationTestHelper.StartServerWithTextAsync(this.TestContext, file, syntaxTree.FileUri, resourceTypeProvider: BuiltInTestTypes.Create());
             var completions = await RequestCompletions(client, syntaxTree, cursors);
 
             completions.Should().SatisfyRespectively(
@@ -331,7 +332,7 @@ resource testRes5 'Test.Rp/readWriteTests@2020-01-01' |= {
             }
 
             var syntaxTree = SyntaxTree.Create(new Uri("file:///path/to/main.bicep"), file);
-            var client = await IntegrationTestHelper.StartServerWithTextAsync(file, syntaxTree.FileUri, resourceTypeProvider: BuiltInTestTypes.Create());
+            var client = await IntegrationTestHelper.StartServerWithTextAsync(this.TestContext, file, syntaxTree.FileUri, resourceTypeProvider: BuiltInTestTypes.Create());
             var completions = await RequestCompletions(client, syntaxTree, cursors);
 
             completions.Should().SatisfyRespectively(
