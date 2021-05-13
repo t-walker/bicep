@@ -1207,7 +1207,7 @@ resource test5 'Rp.A/parent/child@2020-10-01' existing = {
 
             failedResult.Should().HaveDiagnostics(new[] {
                 ("BCP036", DiagnosticLevel.Error, "The property \"name\" expected a value of type \"'val1' | 'val2' | null\" but the provided value is of type \"'notAValidVal'\"."),
-                ("BCP036", DiagnosticLevel.Error, "The property \"name\" expected a value of type \"'val1' | 'val2'\| null" but the provided value is of type \"'notAValidVal'\"."),
+                ("BCP036", DiagnosticLevel.Error, "The property \"name\" expected a value of type \"'val1' | 'val2' | null\" but the provided value is of type \"'notAValidVal'\"."),
             });
         }
 
